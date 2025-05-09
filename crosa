@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prostate Cancer Awareness Crossword</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .info-box {
+            background-color: #e0f7fa;
+            border-left: 5px solid #00acc1;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .crossword-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .grid-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(15, 30px);
+            grid-template-rows: repeat(15, 30px);
+            gap: 1px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-color: white;
+        }
+        .cell.black {
+            background-color: black;
+        }
+        .number {
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            font-size: 8px;
+        }
+        .clues-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 800px;
+        }
+        .clues {
+            width: 48%;
+        }
+        .clue-list {
+            padding-left: 20px;
+        }
+        .clue-list li {
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            text-transform: uppercase;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: 2px solid #3498db;
+        }
+        .center {
+            text-align: center;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+            height: 20px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Prostate Cancer Awareness Crossword</h1>
+        <p>Test your knowledge about prostate cancer facts, symptoms, treatments, and prevention</p>
+    </header>
+
+    <div class="info-box">
+        <p><strong>Did you know?</strong> Prostate cancer is one of the most common types of cancer in men. Early detection and awareness are crucial for successful treatment. This crossword puzzle aims to educate about important prostate cancer facts in an engaging way.</p>
+    </div>
+
+    <div class="crossword-container">
+        <div class="grid-container">
+            <div class="grid" id="crossword-grid"></div>
+        </div>
+        
+        <div class="center">
+            <button id="check-btn">Check Answers</button>
+            <button id="reveal-btn">Reveal Puzzle</button>
+            <button id="reset-btn">Reset Puzzle</button>
+            <div class="message" id="message"></div>
+        </div>
+    </div>
+
+    <div class="clues-container">
+        <div class="clues">
+            <h3>Across</h3>
+            <ol class="clue-list" id="across-clues"></ol>
+        </div>
+        <div class="clues">
+            <h3>Down</h3>
+            <ol class="clue-list" id="down-clues"></ol>
+        </div>
+    </div>
+
+    <footer>
+        <p>This crossword puzzle was created for educational purposes. Always consult healthcare professionals for medical advice.</p>
+    </footer>
+
+    <script>
+        // Crossword puzzle data
+        const crosswordData = {
+            grid: [
+                "PSAR.BIOPSYR...",
+                "S...C.N...C....",
+                "A...R.C...R....",
+                "...ANTIGEN.E...",
+                "G....I.E.E.E...",
+                "L...GLEASON.N..",
+                "E..A.O..C.I.I..",
+                "SCREENING.N.N..",
+                "O..R.I..G.G.G..",
+                "N..O.N.PROSTATE",
+                "...WATCHFUL...C",
+                "P..X...O...P.R.",
+                "S..I...G...E.E.",
+                "A..D...Y...C.E.",
+                "...E.....I.I...",
+            ],
+            clues: {
+                across: {
+                    1: "PSA stands for Prostate Specific _____",
+                    4: "Tissue sampling procedure to detect cancer",
+                    7: "A substance that causes the immune system to produce antibodies",
+                    8: "_____ score is used to grade prostate cancer cells (1-5)",
+                    9: "Regular testing for early detection",
+                    11: "The gland affected in this type of cancer",
+                    12: "_____ waiting is a monitoring approach for low-risk prostate cancer",
+                    13: "Element used in internal radiation therapy for prostate cancer"
+                },
+                down: {
+                    1: "Painless procedure used to visualize the prostate",
+                    2: "Cancer cells that have spread to other parts",
+                    3: "An imaging technique to assess prostate cancer (abbr.)",
+                    5: "Abbreviation for surgical removal of the prostate",
+                    6: "Advanced _____ cancer has spread beyond the prostate",
+                    8: "Hormone that prostate cancer cells often depend on",
+                    10: "Digital _____ Examination is used for screening"
+                }
+            },
+            answers: {
+                across: {
+                    1: "ANTIGEN",
+                    4: "BIOPSY",
+                    7: "ANTIGEN",
+                    8: "GLEASON",
+                    9: "SCREENING", 
+                    11: "PROSTATE",
+                    12: "WATCHFUL",
+                    13: "IODINE"
+                },
+                down: {
+                    1: "PSA",
+                    2: "METASTASIS",
+                    3: "MRI",
+                    5: "RPEC",
+                    6: "STAGE",
+                    8: "GNRH",
+                    10: "RECTAL"
+                }
+            }
+        };
+
+        // Cell numbers for starting positions
+        const cellNumbers = {
+            "0,0": 1,
+            "0,7": 4,
+            "3,0": 7,
+            "5,4": 8,
+            "7,0": 9,
+            "9,7": 11,
+            "10,3": 12,
+            "12,10": 13,
+            "0,0": 1,
+            "0,2": 2,
+            "0,5": 3,
+            "5,11": 5,
+            "6,8": 6,
+            "8,3": 8,
+            "13,10": 10
+        };
+
+        // Initialize the crossword grid
+        function initializeGrid() {
+            const grid = document.getElementById('crossword-grid');
+            
+            // Create cells based on the grid data
+            for (let rowIndex = 0; rowIndex < crosswordData.grid.length; rowIndex++) {
+                const row = crosswordData.grid[rowIndex];
+                
+                for (let colIndex = 0; colIndex < row.length; colIndex++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = rowIndex;
+                    cell.dataset.col = colIndex;
+                    
+                    if (row[colIndex] === '.') {
+                        // Black cell
+                        cell.classList.add('black');
+                    } else {
+                        // Input cell
+                        const input = document.createElement('input');
+                        input.maxLength = 1;
+                        input.dataset.row = rowIndex;
+                        input.dataset.col = colIndex;
+                        input.addEventListener('keydown', handleKeyDown);
+                        input.addEventListener('focus', highlightWord);
+                        cell.appendChild(input);
+                        
+                        // Add cell number if it exists
+                        const cellKey = `${rowIndex},${colIndex}`;
+                        if (cellNumbers[cellKey]) {
+                            const numberSpan = document.createElement('span');
+                            numberSpan.className = 'number';
+                            numberSpan.textContent = cellNumbers[cellKey];
+                            cell.appendChild(numberSpan);
+                        }
+                    }
+                    
+                    grid.appendChild(cell);
+                }
+            }
+            
+            // Populate clue lists
+            populateClues('across', crosswordData.clues.across);
+            populateClues('down', crosswordData.clues.down);
+        }
+
+        // Populate clue lists
+        function populateClues(direction, clues) {
+            const clueList = document.getElementById(`${direction}-clues`);
+            
+            // Sort the clue numbers and create list items
+            Object.keys(clues)
+                .sort((a, b) => parseInt(a) - parseInt(b))
+                .forEach(number => {
+                    const li = document.createElement('li');
+                    li.textContent = `${number}. ${clues[number]}`;
+                    li.dataset.number = number;
+                    li.dataset.direction = direction;
+                    li.addEventListener('click', handleClueClick);
+                    clueList.appendChild(li);
+                });
+        }
+
+        // Handle key presses in cells
+        function handleKeyDown(event) {
+            const row = parseInt(event.target.dataset.row);
+            const col = parseInt(event.target.dataset.col);
+            
+            switch (event.key) {
+                case 'ArrowRight':
+                    moveFocus(row, col + 1);
+                    event.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    moveFocus(row, col - 1);
+                    event.preventDefault();
+                    break;
+                case 'ArrowUp':
+                    moveFocus(row - 1, col);
+                    event.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    moveFocus(row + 1, col);
+                    event.preventDefault();
+                    break;
+                case 'Backspace':
+                    if (event.target.value === '') {
+                        // Move to previous cell if current is empty
+                        moveFocus(row, col - 1);
+                        event.preventDefault();
+                    }
+                    break;
+                default:
+                    if (/^[a-zA-Z]$/.test(event.key)) {
+                        // Auto-advance to next cell after typing a letter
+                        setTimeout(() => {
+                            moveFocus(row, col + 1);
+                        }, 10);
+                    }
+            }
+        }
+
+        // Move focus to a specific cell
+        function moveFocus(row, col) {
+            if (row < 0 || row >= crosswordData.grid.length || 
+                col < 0 || col >= crosswordData.grid[0].length) {
+                return; // Out of bounds
+            }
+            
+            const targetCell = getCell(row, col);
+            if (!targetCell || targetCell.classList.contains('black')) {
+                // Try to skip black cells
+                if (event.key === 'ArrowRight') moveFocus(row, col + 1);
+                else if (event.key === 'ArrowLeft') moveFocus(row, col - 1);
+                else if (event.key === 'ArrowUp') moveFocus(row - 1, col);
+                else if (event.key === 'ArrowDown') moveFocus(row + 1, col);
+                return;
+            }
+            
+            const input = targetCell.querySelector('input');
+            if (input) {
+                input.focus();
+            }
+        }
+
+        // Get a cell by row and column
+        function getCell(row, col) {
+            return document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+        }
+
+        // Highlight the word when a cell is focused
+        function highlightWord(event) {
+            // Clear previous highlights
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.style.backgroundColor = cell.classList.contains('black') ? 'black' : 'white';
+            });
+            
+            const row = parseInt(event.target.dataset.row);
+            const col = parseInt(event.target.dataset.col);
+            
+            // Check if part of horizontal word
+            let startCol = col;
+            while (startCol > 0 && !getCell(row, startCol - 1).classList.contains('black')) {
+                startCol--;
+            }
+            
+            let endCol = col;
+            while (endCol < crosswordData.grid[0].length - 1 && !getCell(row, endCol + 1).classList.contains('black')) {
+                endCol++;
+            }
+            
+            if (endCol > startCol) {
+                // Highlight horizontal word
+                for (let c = startCol; c <= endCol; c++) {
+                    getCell(row, c).style.backgroundColor = '#e0f7fa';
+                }
+            }
+            
+            // Check if part of vertical word
+            let startRow = row;
+            while (startRow > 0 && !getCell(startRow - 1, col).classList.contains('black')) {
+                startRow--;
+            }
+            
+            let endRow = row;
+            while (endRow < crosswordData.grid.length - 1 && !getCell(endRow + 1, col).classList.contains('black')) {
+                endRow++;
+            }
+            
+            if (endRow > startRow) {
+                // Highlight vertical word
+                for (let r = startRow; r <= endRow; r++) {
+                    getCell(r, col).style.backgroundColor = '#e0f7fa';
+                }
+            }
+        }
+
+        // Handle click on a clue
+        function handleClueClick(event) {
+            const number = event.target.dataset.number;
+            const direction = event.target.dataset.direction;
+            
+            // Find the starting cell for this clue
+            for (let row = 0; row < crosswordData.grid.length; row++) {
+                for (let col = 0; col < crosswordData.grid[row].length; col++) {
+                    const cellKey = `${row},${col}`;
+                    if (cellNumbers[cellKey] == number) {
+                        const cell = getCell(row, col);
+                        const input = cell.querySelector('input');
+                        if (input) {
+                            input.focus();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check answers
+        function checkAnswers() {
+            let correct = true;
+            let filled = true;
+            
+            for (let row = 0; row < crosswordData.grid.length; row++) {
+                for (let col = 0; col < crosswordData.grid[row].length; col++) {
+                    const cell = getCell(row, col);
+                    if (cell && !cell.classList.contains('black')) {
+                        const input = cell.querySelector('input');
+                        const expectedChar = crosswordData.grid[row][col];
+                        
+                        if (input.value === '') {
+                            filled = false;
+                        } else if (input.value.toUpperCase() !== expectedChar) {
+                            correct = false;
+                            input.style.color = 'red';
+                        } else {
+                            input.style.color = 'green';
+                        }
+                    }
+                }
+            }
+            
+            const message = document.getElementById('message');
+            if (!filled) {
+                message.textContent = 'Please fill in all cells!';
+                message.style.color = 'blue';
+            } else if (correct) {
+                message.textContent = 'Congratulations! All answers are correct!';
+                message.style.color = 'green';
+            } else {
+                message.textContent = 'Some answers are incorrect. Incorrect letters are shown in red.';
+                message.style.color = 'red';
+            }
+        }
+
+        // Reveal the puzzle solution
+        function revealPuzzle() {
+            for (let row = 0; row < crosswordData.grid.length; row++) {
+                for (let col = 0; col < crosswordData.grid[row].length; col++) {
+                    const cell = getCell(row, col);
+                    if (cell && !cell.classList.contains('black')) {
+                        const input = cell.querySelector('input');
+                        const expectedChar = crosswordData.grid[row][col];
+                        input.value = expectedChar;
+                        input.style.color = 'blue';
+                    }
+                }
+            }
+            
+            const message = document.getElementById('message');
+            message.textContent = 'Puzzle solution revealed.';
+            message.style.color = 'blue';
+        }
+
+        // Reset the puzzle
+        function resetPuzzle() {
+            document.querySelectorAll('.cell input').forEach(input => {
+                input.value = '';
+                input.style.color = 'black';
+            });
+            
+            const message = document.getElementById('message');
+            message.textContent = '';
+        }
+
+        // Initialize the crossword
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGrid();
+            
+            // Add event listeners to buttons
+            document.getElementById('check-btn').addEventListener('click', checkAnswers);
+            document.getElementById('reveal-btn').addEventListener('click', revealPuzzle);
+            document.getElementById('reset-btn').addEventListener('click', resetPuzzle);
+        });
+    </script>
+</body>
+</html>
